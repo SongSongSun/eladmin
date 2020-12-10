@@ -1,5 +1,5 @@
 FROM 47.108.49.133:8001/library/jdk:8
-WORKDIR /home/eladmin
+WORKDIR /eladmin
 
 #解决中文乱码问题
 ENV LANG en_US.UTF-8
