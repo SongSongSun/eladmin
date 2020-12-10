@@ -40,5 +40,5 @@ sudo docker run -d \
 -e DB_PWD=Plant_2994 \
 -e REDIS_HOST=47.108.49.133 \
 -e REDIS_PORT=8002 \
--v /home/song/eladmin/data:/eladmin \
+-v /home/song/eladmin/log:/home/eladmin/log \
 $PROJECT_NAME:${BUILD_VERSION}
