@@ -38,5 +38,7 @@ sudo docker run -d \
 -p ${UMC_PROTAL_PORT}:9000  \
 -e DB_HOST=47.108.49.133 \
 -e DB_PWD=Plant_2994 \
--v /home/song/eladmin/:/home/eladmin/ \
+-e REDIS_HOST=47.108.49.133 \
+-e REDIS_PORT=8002
+-v /home/song/eladmin/data:/home/eladmin/ \
 $PROJECT_NAME:${BUILD_VERSION}
