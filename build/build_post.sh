@@ -8,3 +8,5 @@ BUILD_VERSION=$1
 docker build -t $PROJECT_NAME:${BUILD_VERSION} .
 
 docker save -o $PROJECT_NAME-${BUILD_VERSION}.tar  $PROJECT_NAME:${BUILD_VERSION}
+
+mv $PROJECT_NAME-${BUILD_VERSION}.tar /home/song/eladmin
