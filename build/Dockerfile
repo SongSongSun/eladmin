@@ -1,5 +1,5 @@
 #FROM 47.108.49.133:8001/library/jdk:8
-FROM 47.108.49.133:8001/common/jdk:alpine8
+FROM 139.224.104.143:8001/common/jdk:alpine8
 WORKDIR /home/eladmin
 
 #解决中文乱码问题
