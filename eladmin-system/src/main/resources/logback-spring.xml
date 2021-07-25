@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds" debug="false">
+    <springProperty scop="context" name="baseFile" source="local.logging.file.path"/>
+    <springProperty scop="context" name="maxdays" source="local.logging.file.maxdays"/>
+    <springProperty scop="context" name="maxsize" source="local.logging.file.maxsize"/>
+    <springProperty scop="context" name="totalsize" source="local.logging.file.totalsize"/>
+    <springProperty scop="context" name="serverName" source="spring.application.name"/>
+    <springProperty scop="context" name="generalLevel" source="local.logging.file.general.level"/>
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_HOME" value="${baseFile}"/>
+    <!--日志格式：[时间]-[日志级别]-[线程名]-[类名方法行数]-[信息]-->
+    <property name="LOG_FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}-%method-%line - %msg%n"/>
+    <property name="LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){red} [%clr(%thread){gray}] %highlight(%-5level) %cyan(%logger{50}-%method-%line) - %msg%n"/>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="ext" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--file标签为日志临时存放文件，只有当此文件达到maxFileSize时才会把日志输出到滚动文件，缺点，按天保存时文件要达到maxFileSize才会重建文件夹-->
+        <!--<file>${LOG_HOME}/${serverName}-COMMON.txt</file>-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/${serverName}.%i.txt</fileNamePattern>
+            <!--日志文件保留天数-->
+            <maxHistory>${maxdays}</maxHistory>
+            <!--日志文件的最大大小-->
+            <maxFileSize>${maxsize}</maxFileSize>
+            <!--总文件大小限制大小-->
+            <totalSizeCap>${totalsize}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${LOG_FILE_PATTERN}</pattern>
+            <!--统一格式为UTF-8-->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!-- 根logger日志输出 -->
+    <root level="${generalLevel}">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+    <!--监控sql日志输出 -->
+    <logger name="jdbc.sqlonly" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="jdbc.resultset" level="ERROR" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!--  如想看到表格数据，将OFF改为INFO  -->
+    <logger name="jdbc.resultsettable" level="OFF" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="jdbc.connection" level="OFF" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="jdbc.sqltiming" level="OFF" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="jdbc.audit" level="OFF" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+</configuration>
